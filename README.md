@@ -12,7 +12,7 @@ It can't filter out programs that are not compatible and can't force a window to
 The program requires PowerShell in order to run correctly. On first launch, the program will check to make sure your computer has been set up to run scripts. From there, you should be able to run the program normally. Sometimes PowerShell will truncate the remaining letters of a window title. Click the refresh button a few times until it is resolved. This is not a fault of my program, but of PowerShell.
 
 This program comes with no warranties of any sort, express or implied.
-For support, please post your issues on the board on https://github.com/zspriggs19/Window-Opacity-Tool or email me at zspriggs14@gmail.com
+For support, please post your issues on the board on https://github.com/SpriggsySpriggs/Window-Opacity-Tool or email me at zspriggs14@gmail.com
 
 Created using Inform Beta 8 found here at https://github.com/FellippeHeitor/InForm
 
