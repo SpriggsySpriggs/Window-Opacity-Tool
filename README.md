@@ -14,4 +14,6 @@ The program requires PowerShell in order to run correctly. On first launch, the 
 This program comes with no warranties of any sort, express or implied.
 For support, please post your issues on the board on https://github.com/zspriggs19/Window-Opacity-Tool or email me at zspriggs14@gmail.com
 
+Created using Inform Beta 8 found here at https://github.com/FellippeHeitor/InForm
+
 Source code will be available in the repository. Requires QB64 to compile.
