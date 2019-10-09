@@ -5,7 +5,7 @@ What this program does:
 Allows the user to select a window to manipulate and set opacity level.
 
 What this program can't do:
-It can't filter out programs that are not compatible and can't force a window to accept opacity changes. The window must already be compatible through the Windows API.
+It can't filter out programs that are not compatible and can't force a window to accept opacity changes. The window must already be compatible through the Windows API. It is also NOT a permanent change. It lasts only for as long as the window remains open. You will need to change the opacity again upon reopening the window you have changed.
 
 # NOTICE:
 ----------------------------------
