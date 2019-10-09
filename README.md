@@ -21,16 +21,29 @@ Source code will be available in the repository. Requires QB64 to compile.
 
 # Windows 10 Apps that are supported by this program:
 This list will expand as more apps are discovered to work. If you find some that are compatible, email me or post them in the board and I will add them here.
+
 Groove Music
+
 Spotify
+
 MyTube Beta
+
 People
+
 Movies & TV
+
 Photos
+
 Video Editor
+
 Windows Terminal
+
 Microsoft To Do
+
 Sticky Notes
+
 Snip & Sketch
+
 Weather
+
 (Most other Windows 10 Apps that have title bars, including File Explorer)
