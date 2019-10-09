@@ -46,4 +46,4 @@ Snip & Sketch
 
 Weather
 
-(Most other Windows 10 Apps that have title bars, including File Explorer)
+(Most other Windows 10 Apps that have titles shown in either taskbar or titlebar, including File Explorer)
