@@ -3,6 +3,12 @@
 ': Fellippe Heitor, 2016-2018 - fellippe@qb64.org - @fellippeheitor
 ': https://github.com/FellippeHeitor/InForm
 '-----------------------------------------------------------
+$VERSIONINFO:CompanyName=Zachary Spriggs
+$VERSIONINFO:FILEVERSION#=1,0,0,0
+$VERSIONINFO:ProductName=Window Opacity Tool
+$VERSIONINFO:LegalCopyright=(c)2019 Zachary Spriggs
+$VERSIONINFO:Comments=Sets opacity level of windows using PowerShell commands
+$VERSIONINFO:FileDescription=Window Opacity Tool
 
 ': Controls' IDs: ------------------------------------------------------------------
 DIM SHARED WindowOpacityTool AS LONG
