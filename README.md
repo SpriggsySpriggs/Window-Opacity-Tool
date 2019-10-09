@@ -14,6 +14,7 @@ The program requires PowerShell in order to run correctly. On first launch, the 
 This program comes with no warranties of any sort, express or implied.
 
 To see my video explaining the program, click here: https://www.youtube.com/watch?v=1dNukGA9e6k
+
 For support, please post your issues on the board on https://github.com/SpriggsySpriggs/Window-Opacity-Tool or email me at zspriggs14@gmail.com
 
 Created using Inform Beta 8 found here at https://github.com/FellippeHeitor/InForm
