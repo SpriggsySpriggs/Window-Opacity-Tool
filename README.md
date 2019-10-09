@@ -50,4 +50,8 @@ Windows Security (previously Windows Defender)
 
 Microsoft Edge Dev (Chromium, not native Edge)
 
+Translator
+
+Microsoft Remote Desktop
+
 (Most other Windows 10 Apps that have titles shown in either taskbar or titlebar, including File Explorer)
