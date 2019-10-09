@@ -46,4 +46,6 @@ Snip & Sketch
 
 Weather
 
+Windows Security (previously Windows Defender)
+
 (Most other Windows 10 Apps that have titles shown in either taskbar or titlebar, including File Explorer)
