@@ -12,6 +12,7 @@ It can't filter out programs that are not compatible and can't force a window to
 The program requires PowerShell in order to run correctly. On first launch, the program will check to make sure your computer has been set up to run scripts. From there, you should be able to run the program normally. Sometimes PowerShell will truncate the remaining letters of a window title. Click the refresh button a few times until it is resolved. This is not a fault of my program, but of PowerShell. If you can't find a window in the list, try entering the title of the window EXACTLY as it is in the title bar and it might work. File Explorer is one of the programs that has to be done this way.
 
 This program comes with no warranties of any sort, express or implied.
+
 To see my video explaining the program, click here: https://www.youtube.com/watch?v=1dNukGA9e6k
 For support, please post your issues on the board on https://github.com/SpriggsySpriggs/Window-Opacity-Tool or email me at zspriggs14@gmail.com
 
