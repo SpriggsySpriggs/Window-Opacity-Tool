@@ -286,6 +286,7 @@ Function New-WPFMessageBox {
 
     # Load the window from XAML
     $Window = [Windows.Markup.XamlReader]::Load((New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $xaml))
+    $Window.topmost = $True
 
     # Custom function to add a button
     Function Add-Button {
@@ -411,7 +412,7 @@ Function New-WPFMessageBox {
     {
         $Window.Add_Loaded({
             $This.Activate()
-            $window.topmost=$false
+            $window.topmost=$true
         })
     }
     
