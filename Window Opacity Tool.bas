@@ -40,6 +40,7 @@ $EXEICON:'Nishad2m8-Hologram-Dock-Windows.ico'
 DECLARE DYNAMIC LIBRARY "kernel32"
     FUNCTION GetLastError~& ()
 END DECLARE
+'$INCLUDE:'getWindowTitles.ps1.bin.bas'
 ': External modules: ---------------------------------------------------------------
 '$INCLUDE:'InForm\InForm.ui'
 '$INCLUDE:'InForm\xp.uitheme'
@@ -53,13 +54,6 @@ SUB __UI_BeforeInit
         PRINT #10, "POLICY SET @ " + Clock$ + " ON " + DATE$ 'Prints a time and date stamp in the file policycheck.txt
         CLOSE #10
         SHELL _HIDE _DONTWAIT "attrib +h policycheck.txt" 'Hides the file from user
-    END IF
-    IF _FILEEXISTS("getWindowTitles.ps1") = 0 THEN
-        OPEN "getWindowTitles.ps1" FOR OUTPUT AS #1
-        PRINT #1, "$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'"
-        PRINT #1, "Get-Process | Where-Object {$_.MainWindowTitle -ne " + CHR$(34) + CHR$(34) + "} | Select-Object MainWindowTitle > openWindows.txt"
-        CLOSE #1
-        SHELL _HIDE _DONTWAIT "attrib +h getWindowTitles.ps1" 'Hides the file from user
     END IF
     SHELL _HIDE "powershell " + CHR$(34) + "&" + CHR$(34) + CHR$(34) + _STARTDIR$ + "\getWindowTitles.ps1" + CHR$(34) + CHR$(34) + CHR$(34)
 END SUB
@@ -257,28 +251,28 @@ SUB __UI_Click (id AS LONG)
                         NEXT
                         IF MyHwnd THEN
                             SetWindowOpacity MyHwnd, opacity
-                        Params.TitleBackground = "Lime"
-                        Params.Title = "Opacity Successfully Set!"
-                        Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
-                        Params.TitleFontSize = "28"
-                        Params.TitleFontWeight = "Bold"
-                        Params.ContentFontSize = "18"
-                        Params.ContentFontWeight = "Medium"
-                        Params.ContentBackground = "MintCream"
-                        Answer = WPFMessageBox(Params)
+                            Params.TitleBackground = "Lime"
+                            Params.Title = "Opacity Successfully Set!"
+                            Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
+                            Params.TitleFontSize = "28"
+                            Params.TitleFontWeight = "Bold"
+                            Params.ContentFontSize = "18"
+                            Params.ContentFontWeight = "Medium"
+                            Params.ContentBackground = "MintCream"
+                            Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
                             Control(ProgressBar1).Value = 0
                         ELSE
-                        Params.TitleBackground = "Red"
-                        Params.Title = "Couldn't change opacity"
-                        Params.Content = "Failed to change opacity"
-                        Params.TitleFontSize = "28"
-                        Params.TitleFontWeight = "Bold"
-                        Params.ContentFontSize = "18"
-                        Params.ContentFontWeight = "Medium"
-                        Params.ContentBackground = "MintCream"
-                        Params.Sound = "Windows Error"
-                        Answer = WPFMessageBox(Params)
+                            Params.TitleBackground = "Red"
+                            Params.Title = "Couldn't change opacity"
+                            Params.Content = "Failed to change opacity"
+                            Params.TitleFontSize = "28"
+                            Params.TitleFontWeight = "Bold"
+                            Params.ContentFontSize = "18"
+                            Params.ContentFontWeight = "Medium"
+                            Params.ContentBackground = "MintCream"
+                            Params.Sound = "Windows Error"
+                            Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
                             Control(ProgressBar1).Value = 0
                         END IF
