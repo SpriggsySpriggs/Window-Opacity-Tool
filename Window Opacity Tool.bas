@@ -58,9 +58,6 @@ SUB __UI_OnLoad
     OPEN "openWindows.txt" FOR BINARY AS #1
     ResetList ListBox1
     IF EOF(1) = 0 THEN
-        LINE INPUT #1, foo$
-        LINE INPUT #1, foo$
-        LINE INPUT #1, foo$
         DO
             LINE INPUT #1, Window$
             IF Window$ <> "" THEN
@@ -300,9 +297,6 @@ SUB __UI_Click (id AS LONG)
             OPEN "openWindows.txt" FOR BINARY AS #1
             ResetList ListBox1
             IF EOF(1) = 0 THEN
-                LINE INPUT #1, foo$
-                LINE INPUT #1, foo$
-                LINE INPUT #1, foo$
                 DO
                     LINE INPUT #1, Window$
                     IF Window$ <> "" THEN
