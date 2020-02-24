@@ -37,6 +37,7 @@ DIM MyHwnd AS LONG
 DIM SHARED WindowVal
 DIM SHARED opacity
 $EXEICON:'Nishad2m8-Hologram-Dock-Windows.ico'
+_ICON
 DECLARE DYNAMIC LIBRARY "kernel32"
     FUNCTION GetLastError~& ()
 END DECLARE
@@ -48,14 +49,7 @@ END DECLARE
 
 ': Event procedures: ---------------------------------------------------------------
 SUB __UI_BeforeInit
-    IF _FILEEXISTS("policycheck.txt") = 0 THEN 'Checks if policycheck.txt exists
-        SHELL _HIDE "PowerShell -NoProfile -ExecutionPolicy Bypass -Command " + CHR$(34) + "& {Start-Process PowerShell -ArgumentList 'Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force' -Verb RunAs}" + CHR$(34) 'Sets PowerShell script execution policy to remotesigned
-        OPEN "policycheck.txt" FOR OUTPUT AS #10 'Opens policycheck.txt to read in data
-        PRINT #10, "POLICY SET @ " + Clock$ + " ON " + DATE$ 'Prints a time and date stamp in the file policycheck.txt
-        CLOSE #10
-        SHELL _HIDE _DONTWAIT "attrib +h policycheck.txt" 'Hides the file from user
-    END IF
-    SHELL _HIDE "powershell " + CHR$(34) + "&" + CHR$(34) + CHR$(34) + _STARTDIR$ + "\getWindowTitles.ps1" + CHR$(34) + CHR$(34) + CHR$(34)
+    SHELL _HIDE "PowerShell -ExecutionPolicy Bypass -Command " + CHR$(34) + "&" + CHR$(34) + CHR$(34) + _STARTDIR$ + "\getWindowTitles.ps1" + CHR$(34) + CHR$(34) + CHR$(34)
 END SUB
 
 SUB __UI_OnLoad
@@ -86,6 +80,7 @@ SUB __UI_OnLoad
     END IF
     CLOSE #1
     Control(TrackBar1).Value = 255
+    _SCREENMOVE _MIDDLE
 END SUB
 
 SUB __UI_BeforeUpdateDisplay
@@ -127,25 +122,30 @@ SUB __UI_Click (id AS LONG)
                 IF Answer = ButtonClicked.Yes THEN 'MsgBox_Yes THEN
                     IF Text(WindowTitleTB) <> "" THEN
                         Window$ = Text(WindowTitleTB)
-                        FOR x = 1 TO 10
+                        'FOR x = 1 TO 10
+                        IF Window$ = _TITLE$ THEN
+                            MyHwnd = _WINDOWHANDLE
+                        ELSE
                             MyHwnd = FindWindow(0, Window$ + CHR$(0))
-                            x = x + 1
-                            Control(ProgressBar1).Value = x * 10
-                            _DELAY 0.25
-                        NEXT
+                        END IF
+                        'x = x + 1
+                        'Control(ProgressBar1).Value = x * 10
+                        '_DELAY 0.25
+                        'NEXT
                         IF MyHwnd THEN
                             SetWindowOpacity MyHwnd, opacity
-                            Params.TitleBackground = "Lime"
+                            Params.TitleBackground = "Green"
                             Params.Title = "Opacity Successfully Set!"
                             Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
                             Params.TitleFontSize = "28"
                             Params.TitleFontWeight = "Bold"
+                            Params.TitleTextForeground = "White"
                             Params.ContentFontSize = "18"
                             Params.ContentFontWeight = "Medium"
                             Params.ContentBackground = "MintCream"
                             Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
-                            Control(ProgressBar1).Value = 0
+                            'Control(ProgressBar1).Value = 0
                         ELSE
                             Params.TitleBackground = "Red"
                             Params.Title = "Couldn't change opacity"
@@ -158,32 +158,37 @@ SUB __UI_Click (id AS LONG)
                             Params.Sound = "Windows Error"
                             Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
-                            Control(ProgressBar1).Value = 0
+                            'Control(ProgressBar1).Value = 0
                         END IF
                     ELSE
                         IF Control(ListBox1).Value <> 0 THEN
                             Window$ = GetItem$(ListBox1, WindowVal)
                             Window$ = LTRIM$(Window$)
                             Window$ = RTRIM$(Window$)
-                            FOR x = 1 TO 10
+                            'FOR x = 1 TO 10
+                            IF Window$ = _TITLE$ THEN
+                                MyHwnd = _WINDOWHANDLE
+                            ELSE
                                 MyHwnd = FindWindow(0, Window$ + CHR$(0))
-                                x = x + 1
-                                Control(ProgressBar1).Value = x * 10
-                                _DELAY 0.25
-                            NEXT
+                            END IF
+                            'x = x + 1
+                            'Control(ProgressBar1).Value = x * 10
+                            '_DELAY 0.25
+                            'NEXT
                             IF MyHwnd THEN
                                 SetWindowOpacity MyHwnd, opacity
-                                Params.TitleBackground = "Lime"
+                                Params.TitleBackground = "Green"
                                 Params.Title = "Opacity Successfully Set!"
                                 Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
                                 Params.TitleFontSize = "28"
                                 Params.TitleFontWeight = "Bold"
+                                Params.TitleTextForeground = "White"
                                 Params.ContentFontSize = "18"
                                 Params.ContentFontWeight = "Medium"
                                 Params.ContentBackground = "MintCream"
                                 Answer = WPFMessageBox(Params)
                                 'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
-                                Control(ProgressBar1).Value = 0
+                                'Control(ProgressBar1).Value = 0
                             ELSE
                                 Params.TitleBackground = "Red"
                                 Params.Title = "Couldn't change opacity"
@@ -196,7 +201,7 @@ SUB __UI_Click (id AS LONG)
                                 Params.Sound = "Windows Error"
                                 Answer = WPFMessageBox(Params)
                                 'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
-                                Control(ProgressBar1).Value = 0
+                                'Control(ProgressBar1).Value = 0
                             END IF
                         END IF
                     END IF
@@ -205,25 +210,30 @@ SUB __UI_Click (id AS LONG)
 
                 IF Text(WindowTitleTB) <> "" THEN
                     Window$ = Text(WindowTitleTB)
-                    FOR x = 1 TO 10
+                    'FOR x = 1 TO 10
+                    IF Window$ = _TITLE$ THEN
+                        MyHwnd = _WINDOWHANDLE
+                    ELSE
                         MyHwnd = FindWindow(0, Window$ + CHR$(0))
-                        x = x + 1
-                        Control(ProgressBar1).Value = x * 10
-                        _DELAY 0.25
-                    NEXT
+                    END IF
+                    'x = x + 1
+                    'Control(ProgressBar1).Value = x * 10
+                    '_DELAY 0.25
+                    'NEXT
                     IF MyHwnd THEN
                         SetWindowOpacity MyHwnd, opacity
-                        Params.TitleBackground = "Lime"
+                        Params.TitleBackground = "Green"
                         Params.Title = "Opacity Successfully Set!"
                         Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
                         Params.TitleFontSize = "28"
                         Params.TitleFontWeight = "Bold"
+                        Params.TitleTextForeground = "White"
                         Params.ContentFontSize = "18"
                         Params.ContentFontWeight = "Medium"
                         Params.ContentBackground = "MintCream"
                         Answer = WPFMessageBox(Params)
                         'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
-                        Control(ProgressBar1).Value = 0
+                        'Control(ProgressBar1).Value = 0
                     ELSE
                         Params.TitleBackground = "Red"
                         Params.Title = "Couldn't change opacity"
@@ -236,32 +246,37 @@ SUB __UI_Click (id AS LONG)
                         Params.Sound = "Windows Error"
                         Answer = WPFMessageBox(Params)
                         'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
-                        Control(ProgressBar1).Value = 0
+                        'Control(ProgressBar1).Value = 0
                     END IF
                 ELSE
                     IF Control(ListBox1).Value <> 0 THEN
                         Window$ = GetItem$(ListBox1, WindowVal)
                         Window$ = LTRIM$(Window$)
                         Window$ = RTRIM$(Window$)
-                        FOR x = 1 TO 10
+                        'FOR x = 1 TO 10
+                        IF Window$ = _TITLE$ THEN
+                            MyHwnd = _WINDOWHANDLE
+                        ELSE
                             MyHwnd = FindWindow(0, Window$ + CHR$(0))
-                            x = x + 1
-                            Control(ProgressBar1).Value = x * 10
-                            _DELAY 0.25
-                        NEXT
+                        END IF
+                        'x = x + 1
+                        'Control(ProgressBar1).Value = x * 10
+                        '_DELAY 0.25
+                        'NEXT
                         IF MyHwnd THEN
                             SetWindowOpacity MyHwnd, opacity
-                            Params.TitleBackground = "Lime"
+                            Params.TitleBackground = "Green"
                             Params.Title = "Opacity Successfully Set!"
                             Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
                             Params.TitleFontSize = "28"
                             Params.TitleFontWeight = "Bold"
+                            Params.TitleTextForeground = "White"
                             Params.ContentFontSize = "18"
                             Params.ContentFontWeight = "Medium"
                             Params.ContentBackground = "MintCream"
                             Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
-                            Control(ProgressBar1).Value = 0
+                            'Control(ProgressBar1).Value = 0
                         ELSE
                             Params.TitleBackground = "Red"
                             Params.Title = "Couldn't change opacity"
@@ -274,14 +289,14 @@ SUB __UI_Click (id AS LONG)
                             Params.Sound = "Windows Error"
                             Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
-                            Control(ProgressBar1).Value = 0
+                            'Control(ProgressBar1).Value = 0
                         END IF
                     END IF
                 END IF
             END IF
         CASE LoadOpenWindowsInfoBT
             Text(WindowTitleTB) = ""
-            SHELL _HIDE "powershell " + CHR$(34) + "&" + CHR$(34) + CHR$(34) + _STARTDIR$ + "\getWindowTitles.ps1" + CHR$(34) + CHR$(34) + CHR$(34)
+            SHELL _HIDE "PowerShell -ExecutionPolicy Bypass -Command " + CHR$(34) + "&" + CHR$(34) + CHR$(34) + _STARTDIR$ + "\getWindowTitles.ps1" + CHR$(34) + CHR$(34) + CHR$(34)
             OPEN "openWindows.txt" FOR BINARY AS #1
             ResetList ListBox1
             IF EOF(1) = 0 THEN
