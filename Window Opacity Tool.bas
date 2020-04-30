@@ -3,13 +3,13 @@
 ': Fellippe Heitor, 2016-2018 - fellippe@qb64.org - @fellippeheitor
 ': https://github.com/FellippeHeitor/InForm
 '-----------------------------------------------------------
-$VERSIONINFO:CompanyName=Zachary Spriggs
+$VERSIONINFO:CompanyName=SpriggsySpriggs
 $VERSIONINFO:FILEVERSION#=1,0,0,0
 $VERSIONINFO:ProductName=Window Opacity Tool
-$VERSIONINFO:LegalCopyright=(c)2019 Zachary Spriggs
+$VERSIONINFO:LegalCopyright=(c)2020 SpriggsySpriggs
 $VERSIONINFO:Comments=Sets opacity level of windows using PowerShell commands
 $VERSIONINFO:FileDescription=Window Opacity Tool
-'$INCLUDE:'WPFMessageBox.BI'
+
 ': Controls' IDs: ------------------------------------------------------------------
 DIM SHARED WindowOpacityTool AS LONG
 DIM SHARED ListBox1 AS LONG
@@ -17,9 +17,9 @@ DIM SHARED TrackBar1 AS LONG
 DIM SHARED valLB AS LONG
 DIM SHARED ApplyBT AS LONG
 DIM SHARED LoadOpenWindowsInfoBT AS LONG
-DIM SHARED ProgressBar1 AS LONG
 DIM SHARED DontSeeYourWindowTitleEnterItLB AS LONG
 DIM SHARED WindowTitleTB AS LONG
+
 DECLARE DYNAMIC LIBRARY "user32"
     FUNCTION FindWindowA%& (BYVAL lpClassName%&, BYVAL lpWindowName%&)
     FUNCTION LoadIconA%& (BYVAL hInstance%&, BYVAL lpIconName%&)
@@ -30,19 +30,24 @@ DECLARE DYNAMIC LIBRARY "user32"
     FUNCTION SetWindowLongA& (BYVAL hwnd AS LONG, BYVAL nIndex AS LONG, BYVAL dwNewLong AS LONG)
     FUNCTION SetWindowPos& (BYVAL hwnd AS LONG, BYVAL hWndInsertAfter AS LONG, BYVAL x AS LONG, BYVAL y AS LONG, BYVAL cx AS LONG, BYVAL cy AS LONG, BYVAL wFlags AS LONG)
 END DECLARE
+
 DECLARE LIBRARY
     FUNCTION FindWindow& (BYVAL ClassName AS _OFFSET, WindowName$) ' To get hWnd handle
 END DECLARE
+
 DIM MyHwnd AS LONG
 DIM SHARED WindowVal
 DIM SHARED opacity
 $EXEICON:'Nishad2m8-Hologram-Dock-Windows.ico'
 _ICON
+
 DECLARE DYNAMIC LIBRARY "kernel32"
     FUNCTION GetLastError~& ()
 END DECLARE
-'$INCLUDE:'getWindowTitles.ps1.bin.bas'
+
 ': External modules: ---------------------------------------------------------------
+'$INCLUDE:'WPFMessageBox.BI'
+'$INCLUDE:'getWindowTitles.ps1.bin.bas'
 '$INCLUDE:'InForm\InForm.ui'
 '$INCLUDE:'InForm\xp.uitheme'
 '$INCLUDE:'Window Opacity Tool.frm'
@@ -63,12 +68,12 @@ SUB __UI_OnLoad
             IF Window$ <> "" THEN
                 FOR i = 0 TO 31
                     IF INSTR(Window$, CHR$(i)) THEN
-                        Window$ = ReplaceStringItem$(Window$, CHR$(i), "")
+                        Window$ = Remove(Window$, CHR$(i))
                     END IF
                 NEXT
                 FOR i = 127 TO 255
                     IF INSTR(Window$, CHR$(i)) THEN
-                        Window$ = ReplaceStringItem$(Window$, CHR$(i), "")
+                        Window$ = Remove(Window$, CHR$(i))
                     END IF
                 NEXT
                 AddItem ListBox1, Window$
@@ -104,16 +109,16 @@ SUB __UI_Click (id AS LONG)
 
         CASE ApplyBT
             IF VAL(Caption(valLB)) <= 40 THEN
-                Params.TitleBackground = "Yellow"
+                Params.TitleBackground = Hue.Yellow
                 Params.Title = "NOTICE"
-                Params.Content = "Values 40 and below will be very hard to see. Continue?"
-                Params.TitleFontSize = "28"
-                Params.TitleFontWeight = "Bold"
-                Params.ContentFontSize = "18"
-                Params.ContentFontWeight = "Medium"
-                Params.ButtonType = "Yes-No"
-                Params.ContentBackground = "LightYellow"
-                Params.Sound = "Windows Exclamation"
+                Params.Content = "Values 40 and below will be very hard to see.\nAre you sure you wish to continue?"
+                Params.TitleFontSize = 28
+                Params.TitleFontWeight = FontWeight.Bold
+                Params.ContentFontSize = 18
+                Params.ContentFontWeight = FontWeight.Medium
+                Params.ButtonType = Button.Yes_No
+                Params.ContentBackground = Hue.LightYellow
+                Params.Sound = Alert.Exclamation
                 Answer = WPFMessageBox(Params)
                 'Answer = MessageBox("Values 40 and below will be very hard to see.\nAre you sure you wish to continue?", "NOTICE", MsgBox_YesNo + MsgBox_Information)
                 IF Answer = ButtonClicked.Yes THEN 'MsgBox_Yes THEN
@@ -125,34 +130,30 @@ SUB __UI_Click (id AS LONG)
                         ELSE
                             MyHwnd = FindWindow(0, Window$ + CHR$(0))
                         END IF
-                        'x = x + 1
-                        'Control(ProgressBar1).Value = x * 10
-                        '_DELAY 0.25
-                        'NEXT
                         IF MyHwnd THEN
                             SetWindowOpacity MyHwnd, opacity
-                            Params.TitleBackground = "Green"
+                            Params.TitleBackground = Hue.Green
                             Params.Title = "Opacity Successfully Set!"
-                            Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
-                            Params.TitleFontSize = "28"
-                            Params.TitleFontWeight = "Bold"
-                            Params.TitleTextForeground = "White"
-                            Params.ContentFontSize = "18"
-                            Params.ContentFontWeight = "Medium"
-                            Params.ContentBackground = "MintCream"
+                            Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window :\n" + Window$
+                            Params.TitleFontSize = 28
+                            Params.TitleFontWeight = FontWeight.Bold
+                            Params.TitleTextForeground = Hue.White
+                            Params.ContentFontSize = 18
+                            Params.ContentFontWeight = FontWeight.Medium
+                            Params.ContentBackground = Hue.MintCream
                             Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
                             'Control(ProgressBar1).Value = 0
                         ELSE
-                            Params.TitleBackground = "Red"
+                            Params.TitleBackground = Hue.Red
                             Params.Title = "Couldn't change opacity"
                             Params.Content = "Failed to change opacity"
-                            Params.TitleFontSize = "28"
-                            Params.TitleFontWeight = "Bold"
-                            Params.ContentFontSize = "18"
-                            Params.ContentFontWeight = "Medium"
-                            Params.ContentBackground = "MintCream"
-                            Params.Sound = "Windows Error"
+                            Params.TitleFontSize = 28
+                            Params.TitleFontWeight = FontWeight.Bold
+                            Params.ContentFontSize = 18
+                            Params.ContentFontWeight = FontWeight.Medium
+                            Params.ContentBackground = Hue.MintCream
+                            Params.Sound = Alert.Error
                             Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
                             'Control(ProgressBar1).Value = 0
@@ -168,34 +169,30 @@ SUB __UI_Click (id AS LONG)
                             ELSE
                                 MyHwnd = FindWindow(0, Window$ + CHR$(0))
                             END IF
-                            'x = x + 1
-                            'Control(ProgressBar1).Value = x * 10
-                            '_DELAY 0.25
-                            'NEXT
                             IF MyHwnd THEN
                                 SetWindowOpacity MyHwnd, opacity
-                                Params.TitleBackground = "Green"
+                                Params.TitleBackground = Hue.Green
                                 Params.Title = "Opacity Successfully Set!"
-                                Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
-                                Params.TitleFontSize = "28"
-                                Params.TitleFontWeight = "Bold"
-                                Params.TitleTextForeground = "White"
-                                Params.ContentFontSize = "18"
-                                Params.ContentFontWeight = "Medium"
-                                Params.ContentBackground = "MintCream"
+                                Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window :\n" + Window$
+                                Params.TitleFontSize = 28
+                                Params.TitleFontWeight = FontWeight.Bold
+                                Params.TitleTextForeground = Hue.White
+                                Params.ContentFontSize = 18
+                                Params.ContentFontWeight = FontWeight.Medium
+                                Params.ContentBackground = Hue.MintCream
                                 Answer = WPFMessageBox(Params)
                                 'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
                                 'Control(ProgressBar1).Value = 0
                             ELSE
-                                Params.TitleBackground = "Red"
+                                Params.TitleBackground = Hue.Red
                                 Params.Title = "Couldn't change opacity"
                                 Params.Content = "Failed to change opacity"
-                                Params.TitleFontSize = "28"
-                                Params.TitleFontWeight = "Bold"
-                                Params.ContentFontSize = "18"
-                                Params.ContentFontWeight = "Medium"
-                                Params.ContentBackground = "MintCream"
-                                Params.Sound = "Windows Error"
+                                Params.TitleFontSize = 28
+                                Params.TitleFontWeight = FontWeight.Bold
+                                Params.ContentFontSize = 18
+                                Params.ContentFontWeight = FontWeight.Medium
+                                Params.ContentBackground = Hue.MintCream
+                                Params.Sound = Alert.Error
                                 Answer = WPFMessageBox(Params)
                                 'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
                                 'Control(ProgressBar1).Value = 0
@@ -219,28 +216,28 @@ SUB __UI_Click (id AS LONG)
                     'NEXT
                     IF MyHwnd THEN
                         SetWindowOpacity MyHwnd, opacity
-                        Params.TitleBackground = "Green"
+                        Params.TitleBackground = Hue.Green
                         Params.Title = "Opacity Successfully Set!"
-                        Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
-                        Params.TitleFontSize = "28"
-                        Params.TitleFontWeight = "Bold"
-                        Params.TitleTextForeground = "White"
-                        Params.ContentFontSize = "18"
-                        Params.ContentFontWeight = "Medium"
-                        Params.ContentBackground = "MintCream"
+                        Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window :\n" + Window$
+                        Params.TitleFontSize = 28
+                        Params.TitleFontWeight = FontWeight.Bold
+                        Params.TitleTextForeground = Hue.White
+                        Params.ContentFontSize = 18
+                        Params.ContentFontWeight = FontWeight.Medium
+                        Params.ContentBackground = Hue.MintCream
                         Answer = WPFMessageBox(Params)
                         'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
                         'Control(ProgressBar1).Value = 0
                     ELSE
-                        Params.TitleBackground = "Red"
+                        Params.TitleBackground = Hue.Red
                         Params.Title = "Couldn't change opacity"
                         Params.Content = "Failed to change opacity"
-                        Params.TitleFontSize = "28"
-                        Params.TitleFontWeight = "Bold"
-                        Params.ContentFontSize = "18"
-                        Params.ContentFontWeight = "Medium"
-                        Params.ContentBackground = "MintCream"
-                        Params.Sound = "Windows Error"
+                        Params.TitleFontSize = 28
+                        Params.TitleFontWeight = FontWeight.Bold
+                        Params.ContentFontSize = 18
+                        Params.ContentFontWeight = FontWeight.Medium
+                        Params.ContentBackground = Hue.MintCream
+                        Params.Sound = Alert.Error
                         Answer = WPFMessageBox(Params)
                         'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
                         'Control(ProgressBar1).Value = 0
@@ -262,28 +259,28 @@ SUB __UI_Click (id AS LONG)
                         'NEXT
                         IF MyHwnd THEN
                             SetWindowOpacity MyHwnd, opacity
-                            Params.TitleBackground = "Green"
+                            Params.TitleBackground = Hue.Green
                             Params.Title = "Opacity Successfully Set!"
-                            Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window : " + Window$
-                            Params.TitleFontSize = "28"
-                            Params.TitleFontWeight = "Bold"
-                            Params.TitleTextForeground = "White"
-                            Params.ContentFontSize = "18"
-                            Params.ContentFontWeight = "Medium"
-                            Params.ContentBackground = "MintCream"
+                            Params.Content = "Opacity set to " + LTRIM$(STR$(opacity)) + " for window :\n" + Window$
+                            Params.TitleFontSize = 28
+                            Params.TitleFontWeight = FontWeight.Bold
+                            Params.TitleTextForeground = Hue.White
+                            Params.ContentFontSize = 18
+                            Params.ContentFontWeight = FontWeight.Medium
+                            Params.ContentBackground = Hue.MintCream
                             Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Opacity set to" + STR$(opacity) + " for window : " + Window$, "Opacity Successfully Set!", MsgBox_OkOnly + MsgBox_Information)
                             'Control(ProgressBar1).Value = 0
                         ELSE
-                            Params.TitleBackground = "Red"
+                            Params.TitleBackground = Hue.Red
                             Params.Title = "Couldn't change opacity"
                             Params.Content = "Failed to change opacity"
-                            Params.TitleFontSize = "28"
-                            Params.TitleFontWeight = "Bold"
-                            Params.ContentFontSize = "18"
-                            Params.ContentFontWeight = "Medium"
-                            Params.ContentBackground = "MintCream"
-                            Params.Sound = "Windows Error"
+                            Params.TitleFontSize = 28
+                            Params.TitleFontWeight = FontWeight.Bold
+                            Params.ContentFontSize = 18
+                            Params.ContentFontWeight = FontWeight.Medium
+                            Params.ContentBackground = Hue.MintCream
+                            Params.Sound = Alert.Error
                             Answer = WPFMessageBox(Params)
                             'Answer = MessageBox("Failed to change opacity", "Couldn't change opacity", MsgBox_OkOnly + MsgBox_Exclamation)
                             'Control(ProgressBar1).Value = 0
@@ -302,12 +299,12 @@ SUB __UI_Click (id AS LONG)
                     IF Window$ <> "" THEN
                         FOR i = 0 TO 31
                             IF INSTR(Window$, CHR$(i)) THEN
-                                Window$ = ReplaceStringItem$(Window$, CHR$(i), "")
+                                Window$ = Remove(Window$, CHR$(i))
                             END IF
                         NEXT
                         FOR i = 127 TO 255
                             IF INSTR(Window$, CHR$(i)) THEN
-                                Window$ = ReplaceStringItem$(Window$, CHR$(i), "")
+                                Window$ = Remove(Window$, CHR$(i))
                             END IF
                         NEXT
                         AddItem ListBox1, Window$
@@ -315,7 +312,6 @@ SUB __UI_Click (id AS LONG)
                 LOOP UNTIL EOF(1)
             END IF
             CLOSE #1
-        CASE ProgressBar1
     END SELECT
 END SUB
 
@@ -333,8 +329,6 @@ SUB __UI_MouseEnter (id AS LONG)
 
         CASE LoadOpenWindowsInfoBT
 
-        CASE ProgressBar1
-
     END SELECT
 END SUB
 
@@ -351,8 +345,6 @@ SUB __UI_MouseLeave (id AS LONG)
         CASE ApplyBT
 
         CASE LoadOpenWindowsInfoBT
-
-        CASE ProgressBar1
 
     END SELECT
 END SUB
@@ -399,8 +391,6 @@ SUB __UI_MouseDown (id AS LONG)
 
         CASE LoadOpenWindowsInfoBT
 
-        CASE ProgressBar1
-
     END SELECT
 END SUB
 
@@ -417,8 +407,6 @@ SUB __UI_MouseUp (id AS LONG)
         CASE ApplyBT
 
         CASE LoadOpenWindowsInfoBT
-
-        CASE ProgressBar1
 
     END SELECT
 END SUB
@@ -473,14 +461,20 @@ SUB SetWindowOpacity (hWnd AS LONG, Level)
     CONST G = -20
     CONST LWA_ALPHA = &H2
     CONST WS_EX_LAYERED = &H80000
-
     Msg = GetWindowLong(hWnd, G)
     Msg = Msg OR WS_EX_LAYERED
-    Crap = SetWindowLong(hWnd, G, Msg)
-    Crap = SetLayeredWindowAttributes(hWnd, 0, Level, LWA_ALPHA)
+    a = SetWindowLong(hWnd, G, Msg)
+    'a = SetLayeredWindowAttributes(hWnd, &HFFFFFF, Level, &H1)
+    a = SetLayeredWindowAttributes(hWnd, 0, Level, &H2)
 END SUB
 
-FUNCTION ReplaceStringItem$ (text$, old$, new$)
+FUNCTION Remove$ (text$, old$)
+    DIM find
+    DIM start
+    DIM first$
+    DIM last$
+    DIM new$
+    new$ = ""
     DO
         find = INSTR(start + 1, text$, old$) 'find location of a word in text
         IF find THEN
@@ -490,8 +484,9 @@ FUNCTION ReplaceStringItem$ (text$, old$, new$)
         END IF
         start = find
     LOOP WHILE find
-    ReplaceStringItem$ = text$
+    Remove = text$
 END FUNCTION
+
 FUNCTION Clock$
     hour$ = LEFT$(TIME$, 2): H% = VAL(hour$)
     min$ = MID$(TIME$, 3, 3)
@@ -503,4 +498,5 @@ FUNCTION Clock$
     END IF
     Clock$ = hour$ + min$ + ampm$
 END FUNCTION
+
 '$INCLUDE:'WPFMessageBox.BM'
